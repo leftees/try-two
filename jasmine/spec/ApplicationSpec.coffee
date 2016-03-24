@@ -9,7 +9,7 @@ describe 'Application', ->
       d.resolve requests.users
       d.promise()
     doneFn = jasmine.createSpy 'done'
-    $.when(@.app.init()).done (data) ->
+    $.when(@.app.test_stub()).done (data) ->
       doneFn data
     expect(doneFn).toHaveBeenCalled()
     expect($('#work-space tbody#users-list tr td')[0]).toBeInDOM()

@@ -14,7 +14,7 @@
         return d.promise();
       });
       doneFn = jasmine.createSpy('done');
-      $.when(this.app.init()).done(function(data) {
+      $.when(this.app.test_stub()).done(function(data) {
         return doneFn(data);
       });
       expect(doneFn).toHaveBeenCalled();

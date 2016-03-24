@@ -14,3 +14,10 @@ window.Application = () ->
       $('#work-space').loadTemplate $('#users-table'), {},
         afterInsert: ->
           $('#users-list').loadTemplate $('#user'), data
+    
+  test_stub: () ->
+    $.getJSON 'http://localhost:3000/users.json'
+    .done (data) ->
+      $('#work-space').loadTemplate $('#users-table'), {},
+        afterInsert: ->
+          $('#users-list').loadTemplate $('#user'), data

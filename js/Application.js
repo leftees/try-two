@@ -44,6 +44,15 @@
             }
           });
         });
+      },
+      test_stub: function() {
+        return $.getJSON('http://localhost:3000/users.json').done(function(data) {
+          return $('#work-space').loadTemplate($('#users-table'), {}, {
+            afterInsert: function() {
+              return $('#users-list').loadTemplate($('#user'), data);
+            }
+          });
+        });
       }
     };
   };
