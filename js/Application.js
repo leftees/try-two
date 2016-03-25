@@ -61,7 +61,8 @@
         delete aD.password;
         delete aD.admin;
         delete aD.user_id;
-        return aM.render_login_info();
+        aM.render_login_info();
+        return aM.load_topics_list();
       },
       data_check_username: function() {
         return aM.check_username($(this).val());
@@ -72,22 +73,50 @@
         }).done(function(data) {
           if (data.length === 0) {
             $('nav [data-submit="users:update"]').addClass('disabled');
-            return $('nav [data-form]').removeAttr('data-id');
+            return $('nav [data-form]').removeAttr('value');
           } else {
             aD.username = username;
             aD.admin = data[0].admin;
             aD.user_id = data[0].id;
             $('nav [data-submit="users:update"]').removeClass('disabled');
-            return $('nav [data-form]').attr('data-id', data[0].id);
+            return $('nav [data-form]').attr('value', data[0].id);
           }
         });
+      },
+      enable_update: function() {
+        var form, valid;
+        form = $(this).parents('[data-form]');
+        valid = true;
+        $(form).find('input, textarea').each(function() {
+          if ($(this).val() === '') {
+            return valid = false;
+          }
+        });
+        if (valid) {
+          form.find('[data-submit*="update"]').removeClass('disabled');
+          return form.find('[data-submit*="create"]').removeClass('disabled');
+        } else {
+          form.find('[data-submit*="update"]').addClass('disabled');
+          return form.find('[data-submit*="create"]').addClass('disabled');
+        }
+      },
+      render_done_state: function(model, verb, button, data) {
+        var form;
+        form = $(button).parents('[data-form]');
+        switch (verb) {
+          case 'PUT':
+            return form.find('[data-submit*="update"]').addClass('disabled');
+          case 'DELETE':
+            return form.remove();
+          default:
+            return console.log('created');
+        }
       },
       load_topics_list: function() {
         return $.getJSON('http://localhost:3000/topics.json').done(function(data) {
           return $('#work-space').loadTemplate($('#topics'), {}, {
             afterInsert: function() {
-              var i, len, results, template, topic;
-              results = [];
+              var i, len, template, topic;
               for (i = 0, len = data.length; i < len; i++) {
                 topic = data[i];
                 template = 'topic';
@@ -99,54 +128,67 @@
                     template = 'topic-editable';
                   }
                 }
-                results.push($('#topics-list').loadTemplate($('#' + template), topic, {
+                $('#topics-list').loadTemplate($('#' + template), topic, {
                   append: true
-                }));
+                });
               }
-              return results;
+              if (aD.user_id != null) {
+                return $('#topics-list').loadTemplate($('#new-topic'), {}, {
+                  append: true
+                });
+              }
             }
           });
         });
       },
       common_submit: function() {
-        var controller, form, id, login, model, params, password, route_data, type, url, username;
-        route_data = $(this).data('submit').split(':');
-        controller = route_data[0];
-        type = aD.verbs[route_data[1]];
-        id = type === 'POST' ? '' : '/' + $(this).parents('[data-id]').data('id');
-        url = aD.server + controller + id + '.json';
-        params = {};
-        model = controller.slice(0, -1);
-        params[model] = {};
-        form = $(this).parents('[data-form]');
-        form.find('input, textarea').each(function() {
-          return params[model][$(this).data('field')] = $(this).val();
-        });
-        if (form.data('form' === 'login')) {
-          login = true;
-          username = aD.username != null ? aD.username : params.user.username;
-          password = aD.password != null ? aD.password : params.user.password;
-        } else {
-          login = false;
+        var controller, form, id, login, model, params, password, route_data, self, type, url, username;
+        console.log(aD.username);
+        console.log(aD.password);
+        self = this;
+        if (!$(self).hasClass('disabled')) {
+          route_data = $(self).data('submit').split(':');
+          controller = route_data[0];
+          type = aD.verbs[route_data[1]];
+          form = $(self).parents('[data-form]');
+          id = type === 'POST' ? '' : '/' + $(form).attr('value');
+          url = aD.server + controller + id + '.json';
+          if (type !== 'DELETE') {
+            params = {};
+            model = controller.slice(0, -1);
+            params[model] = {};
+            form.find('input, textarea').each(function() {
+              return params[model][$(this).data('field')] = $(this).val();
+            });
+          }
+          if (form.data('form' === 'login')) {
+            login = true;
+            username = aD.username != null ? aD.username : params.user.username;
+            password = aD.password != null ? aD.password : params.user.password;
+          } else {
+            login = false;
+          }
+          return $.ajax({
+            type: type,
+            url: url,
+            data: params,
+            beforeSend: function(xhr) {
+              return xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
+            }
+          }).done(function(data) {
+            if (login) {
+              aD.username = username;
+              aD.password = password;
+              $.when(aM.check_username(username)).done(function() {
+                aM.render_login_info();
+                return aM.load_topics_list();
+              });
+            }
+            return aM.render_done_state(model, type, self, data);
+          }).fail(function(xhr, s) {
+            return alert(xhr.status + ': ' + xhr.responseText);
+          });
         }
-        return $.ajax({
-          type: type,
-          url: url,
-          data: params,
-          beforeSend: function(xhr) {
-            return xhr.setRequestHeader("Authorization", "Basic " + btoa(username + ":" + password));
-          }
-        }).done(function(data) {
-          if (login) {
-            aD.username = username;
-            aD.password = password;
-            aM.check_username(username);
-            aM.render_login_info();
-            return aM.load_topics_list();
-          }
-        }).fail(function(xhr, s) {
-          return alert(xhr.status + ': ' + xhr.responseText);
-        });
       }
     };
     return {
@@ -154,6 +196,7 @@
         $('nav').on('change', '#navbar[data-form="login"] input[type="text"]', aM.data_check_username);
         $('nav').on('click', '[data-logout]', aM.logout);
         $('body').on('click', '[data-submit]', aM.common_submit);
+        $('#work-space').on('change', '[data-form] input, [data-form] textarea', aM.enable_update);
         aM.render_login_info();
         return aM.load_topics_list();
       },

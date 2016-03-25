@@ -60,18 +60,46 @@
       </div>
     </script>
 
+    <script type="text/html" id="new-topic">
+      <div data-form="create">
+        <h3>Create new topic</h3>
+        <div class="panel panel-warning">
+          <div class="panel-heading">
+            <input type="text" data-field="title" data-value="title">
+          </div>
+          <div class="panel-body">
+            <textarea data-field="content" rows="3" data-content="content"></textarea>
+            <button class="btn btn-success btn-xs pull-right disabled" data-submit="topics:create">
+              <span class="glyphicon glyphicon-ok-sign"></span>
+              <span> Create topic!</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </script>
+
     <script type="text/html" id="topic-editable">
-      <div class="panel panel-warning">
-        <div class="panel-heading" data-content="title"></div>
+      <div class="panel panel-warning" data-form data-value="id">
+        <div class="panel-heading">
+          <input type="text" data-field="title" data-value="title">
+        </div>
         <div class="panel-body">
           <p>
             <span>By </span>
             <span class="label label-info" data-content='user.username'></span>
             <span>started at</span>
             <span class="label label-info" data-content='created_at'></span>
-            <span class="label label-success">Editable!</span>
           </p>
-          <p data-content="content"></p>
+          <textarea data-field="content" rows="3" data-content="content"></textarea>
+          <button class="btn btn-danger btn-xs pull-right" data-submit="topics:destroy">
+            <span class="glyphicon glyphicon-remove-sign"></span>
+            <span> Delete this topic!</span>
+          </button>
+          <span> </span>
+          <button class="btn btn-success btn-xs pull-right disabled" data-submit="topics:update">
+            <span class="glyphicon glyphicon-ok-sign"></span>
+            <span> Submit changes</span>
+          </button>
         </div>
       </div>
     </script>
@@ -131,7 +159,7 @@
     </script>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="js/jquery-1.12.2.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.loadTemplate-1.5.6.min.js"></script>
