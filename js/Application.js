@@ -60,6 +60,7 @@
         delete aD.username;
         delete aD.password;
         delete aD.admin;
+        delete aD.user_id;
         return aM.render_login_info();
       },
       data_check_username: function() {
@@ -75,9 +76,36 @@
           } else {
             aD.username = username;
             aD.admin = data[0].admin;
+            aD.user_id = data[0].id;
             $('nav [data-submit="users:update"]').removeClass('disabled');
             return $('nav [data-form]').attr('data-id', data[0].id);
           }
+        });
+      },
+      load_topics_list: function() {
+        return $.getJSON('http://localhost:3000/topics.json').done(function(data) {
+          return $('#work-space').loadTemplate($('#topics'), {}, {
+            afterInsert: function() {
+              var i, len, results, template, topic;
+              results = [];
+              for (i = 0, len = data.length; i < len; i++) {
+                topic = data[i];
+                template = 'topic';
+                if (aD.user_id != null) {
+                  if (aD.admin) {
+                    template = 'topic-editable';
+                  }
+                  if (aD.user_id === topic.user_id) {
+                    template = 'topic-editable';
+                  }
+                }
+                results.push($('#topics-list').loadTemplate($('#' + template), topic, {
+                  append: true
+                }));
+              }
+              return results;
+            }
+          });
         });
       },
       common_submit: function() {
@@ -113,7 +141,8 @@
             aD.username = username;
             aD.password = password;
             aM.check_username(username);
-            return aM.render_login_info();
+            aM.render_login_info();
+            return aM.load_topics_list();
           }
         }).fail(function(xhr, s) {
           return alert(xhr.status + ': ' + xhr.responseText);
@@ -126,13 +155,7 @@
         $('nav').on('click', '[data-logout]', aM.logout);
         $('body').on('click', '[data-submit]', aM.common_submit);
         aM.render_login_info();
-        return $.getJSON('http://localhost:3000/users.json').done(function(data) {
-          return $('#work-space').loadTemplate($('#users-table'), {}, {
-            afterInsert: function() {
-              return $('#users-list').loadTemplate($('#user'), data);
-            }
-          });
-        });
+        return aM.load_topics_list();
       },
       test_stub: function() {
         return $.getJSON('http://localhost:3000/users.json').done(function(data) {

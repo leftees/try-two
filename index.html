@@ -37,13 +37,44 @@
     </nav>
 
     <div class="container">
-      <div>
-        <h1>Consuming try-one Proto forum Rails API</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-        <div id="work-space"></div>
-      </div>
-    </div><!-- /.container -->
+      <div id="work-space"></div>
+    </div>
 
+    <script type="text/html" id="topics">
+      <h1>Topics list</h1>
+      <div id="topics-list"></div>
+    </script>
+
+    <script type="text/html" id="topic">
+      <div class="panel panel-warning">
+        <div class="panel-heading" data-content="title"></div>
+        <div class="panel-body">
+          <p>
+            <span>By </span>
+            <span class="label label-info" data-content='user.username'></span>
+            <span>started at</span>
+            <span class="label label-info" data-content='created_at'></span>
+          </p>
+          <p data-content="content"></p>
+        </div>
+      </div>
+    </script>
+
+    <script type="text/html" id="topic-editable">
+      <div class="panel panel-warning">
+        <div class="panel-heading" data-content="title"></div>
+        <div class="panel-body">
+          <p>
+            <span>By </span>
+            <span class="label label-info" data-content='user.username'></span>
+            <span>started at</span>
+            <span class="label label-info" data-content='created_at'></span>
+            <span class="label label-success">Editable!</span>
+          </p>
+          <p data-content="content"></p>
+        </div>
+      </div>
+    </script>
 
     <script type="text/html" id="login">
       <div data-form="login" id="navbar" class="navbar-collapse collapse">

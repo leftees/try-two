@@ -30,6 +30,7 @@ window.Application = () ->
       delete aD.username
       delete aD.password
       delete aD.admin
+      delete aD.user_id
       aM.render_login_info()
 
     data_check_username: () ->
@@ -45,8 +46,22 @@ window.Application = () ->
         else
           aD.username = username
           aD.admin = data[0].admin
+          aD.user_id = data[0].id
           $('nav [data-submit="users:update"]').removeClass 'disabled'
           $('nav [data-form]').attr 'data-id', data[0].id
+
+    load_topics_list: () ->
+      $.getJSON 'http://localhost:3000/topics.json'
+      .done (data) ->
+        $('#work-space').loadTemplate $('#topics'), {},
+          afterInsert: ->
+            for topic in data
+              template = 'topic'
+              if aD.user_id?
+                template = 'topic-editable' if aD.admin
+                template = 'topic-editable' if aD.user_id is topic.user_id
+              $('#topics-list').loadTemplate $('#' + template), topic,
+                append: true
 
     common_submit: () ->
       route_data = $(@).data('submit').split ':'
@@ -78,6 +93,7 @@ window.Application = () ->
           aD.password = password
           aM.check_username username
           aM.render_login_info()
+          aM.load_topics_list()
       .fail (xhr, s) ->
         alert xhr.status + ': ' + xhr.responseText
 
@@ -88,12 +104,7 @@ window.Application = () ->
     $('body').on 'click', '[data-submit]', aM.common_submit
 
     aM.render_login_info()
-
-    $.getJSON 'http://localhost:3000/users.json'
-    .done (data) ->
-      $('#work-space').loadTemplate $('#users-table'), {},
-        afterInsert: ->
-          $('#users-list').loadTemplate $('#user'), data
+    aM.load_topics_list()
     
   test_stub: () ->
     $.getJSON 'http://localhost:3000/users.json'
