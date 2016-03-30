@@ -7,3 +7,5 @@ before_install:
 addons:
   code_climate:
     repo_token: a6f6d909e8cfa7b94c44c0fb618d5c6b24beccbe0d805a89d93c596be609c124
+after_script:
+  - codeclimate-test-reporter < lcov.info
