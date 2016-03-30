@@ -1,6 +1,6 @@
 window.Application = () ->
   aD =
-    server: 'http://localhost:3000/'
+    server: 'http://try-catch-vassiliy-pimkin.herokuapp.com/'
     verbs:
       create: 'POST'
       update: 'PUT'
@@ -74,7 +74,7 @@ window.Application = () ->
           console.log 'created'
 
     load_topics_list: () ->
-      $.getJSON 'http://localhost:3000/topics.json'
+      $.getJSON "#{aD.server}topics.json"
       .done (data) ->
         $('#work-space').loadTemplate $('#topics'), {},
           afterInsert: ->
@@ -140,7 +140,7 @@ window.Application = () ->
     aM.load_topics_list()
     
   test_stub: () ->
-    $.getJSON 'http://localhost:3000/users.json'
+    $.getJSON "#{aD.server}/users.json"
     .done (data) ->
       $('#work-space').loadTemplate $('#users-table'), {},
         afterInsert: ->

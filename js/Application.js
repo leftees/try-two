@@ -3,7 +3,7 @@
   window.Application = function() {
     var aD, aM;
     aD = {
-      server: 'http://localhost:3000/',
+      server: 'http://try-catch-vassiliy-pimkin.herokuapp.com/',
       verbs: {
         create: 'POST',
         update: 'PUT',
@@ -113,7 +113,7 @@
         }
       },
       load_topics_list: function() {
-        return $.getJSON('http://localhost:3000/topics.json').done(function(data) {
+        return $.getJSON(aD.server + "topics.json").done(function(data) {
           return $('#work-space').loadTemplate($('#topics'), {}, {
             afterInsert: function() {
               var i, len, template, topic;
@@ -201,7 +201,7 @@
         return aM.load_topics_list();
       },
       test_stub: function() {
-        return $.getJSON('http://localhost:3000/users.json').done(function(data) {
+        return $.getJSON(aD.server + "/users.json").done(function(data) {
           return $('#work-space').loadTemplate($('#users-table'), {}, {
             afterInsert: function() {
               return $('#users-list').loadTemplate($('#user'), data);
