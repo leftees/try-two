@@ -1,13 +1,38 @@
-languages:
-  CoffeeScript: true
+---
+engines:
+  csslint:
+    enabled: true
+  coffeelint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - ruby
+      - javascript
+      - python
+      - php
+  fixme:
+    enabled: true
+ratings:
+  paths:
+  - "**.css"
+  - "**.coffee"
+  - "**.inc"
+  - "**.js"
+  - "**.jsx"
+  - "**.module"
+  - "**.php"
+  - "**.py"
+  - "**.rb"
 exclude_paths:
-- "css/bootstrap-theme.css"
-- "README.md"
-- "coffeelint.json"
-- "css/bootstrap*"
+- css/bootstrap-theme.css
+- README.md
+- coffeelint.json
+- css/bootstrap*
 - "*.html"
-- "fonts/*"
-- "jasmine/lib/*"
-- "js/bootstrap*"
-- "js/jquery*"
-- "package.json"
+- fonts/*
+- jasmine/lib/*
+- js/bootstrap*
+- js/jquery*
+- package.json
