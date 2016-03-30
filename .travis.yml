@@ -4,3 +4,6 @@ node_js:
 before_install:  
   - npm install
   - npm install -g grunt-cli
+addons:
+  code_climate:
+    repo_token: a6f6d909e8cfa7b94c44c0fb618d5c6b24beccbe0d805a89d93c596be609c124
