@@ -1,0 +1,13 @@
+languages:
+  CoffeeScript: true
+exclude_paths:
+- "css/bootstrap-theme.css"
+- "README.md"
+- "coffeelint.json"
+- "css/bootstrap*"
+- "*.html"
+- "fonts/*"
+- "jasmine/lib/*"
+- "js/bootstrap*"
+- "js/jquery*"
+- "package.json"
