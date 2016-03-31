@@ -12,8 +12,10 @@ window.Application = () ->
       prefix = Array(indent).join '  '
       return ' "' + obj + '"' if typeof obj is 'string'
       return ' ' + obj if typeof obj isnt 'object'
-      return ' [' + (aM.csonify(value) for value in obj).join(',') + ' ]' if Array.isArray obj
-      return ('\n' + prefix + '"' + key + '":' + aM.csonify(value, indent) for key, value of obj).join ''
+      return ' [' + (aM.csonify(value) for value in obj).join(',') +
+      ' ]' if Array.isArray obj
+      return ('\n' + prefix + '"' + key + '":' +
+      aM.csonify(value, indent) for key, value of obj).join ''
 
     render_login_info: () ->
       if aD.username?
@@ -57,11 +59,9 @@ window.Application = () ->
       $(form).find('input, textarea').each ->
         valid = false if $(@).val() is ''
       if valid
-        form.find('[data-submit*="update"]').removeClass 'disabled'
-        form.find('[data-submit*="create"]').removeClass 'disabled'
+        form.find('[data-submit*="update"], [data-submit*="create"]').removeClass 'disabled'
       else
-        form.find('[data-submit*="update"]').addClass 'disabled'
-        form.find('[data-submit*="create"]').addClass 'disabled'
+        form.find('[data-submit*="update"], [data-submit*="create"]').addClass 'disabled'
 
     render_done_state: (model, verb, button, data) ->
       form = $(button).parents '[data-form]'
@@ -90,8 +90,6 @@ window.Application = () ->
                 append: true
 
     common_submit: () ->
-      console.log aD.username
-      console.log aD.password
       self = @
       unless $(self).hasClass 'disabled'
         route_data = $(self).data('submit').split ':'
@@ -131,10 +129,11 @@ window.Application = () ->
 
     
   init: () ->
-    $('nav').on 'change', '#navbar[data-form="login"] input[type="text"]', aM.data_check_username
+    $('nav').on 'change', 'input[type="text"]', aM.data_check_username
     $('nav').on 'click', '[data-logout]', aM.logout
     $('body').on 'click', '[data-submit]', aM.common_submit
-    $('#work-space').on 'change', '[data-form] input, [data-form] textarea', aM.enable_update
+    $('#work-space').on 'change',
+    '[data-form] input, [data-form] textarea', aM.enable_update
 
     aM.render_login_info()
     aM.load_topics_list()

@@ -93,11 +93,9 @@
           }
         });
         if (valid) {
-          form.find('[data-submit*="update"]').removeClass('disabled');
-          return form.find('[data-submit*="create"]').removeClass('disabled');
+          return form.find('[data-submit*="update"], [data-submit*="create"]').removeClass('disabled');
         } else {
-          form.find('[data-submit*="update"]').addClass('disabled');
-          return form.find('[data-submit*="create"]').addClass('disabled');
+          return form.find('[data-submit*="update"], [data-submit*="create"]').addClass('disabled');
         }
       },
       render_done_state: function(model, verb, button, data) {
@@ -143,8 +141,6 @@
       },
       common_submit: function() {
         var controller, form, id, login, model, params, password, route_data, self, type, url, username;
-        console.log(aD.username);
-        console.log(aD.password);
         self = this;
         if (!$(self).hasClass('disabled')) {
           route_data = $(self).data('submit').split(':');
@@ -193,7 +189,7 @@
     };
     return {
       init: function() {
-        $('nav').on('change', '#navbar[data-form="login"] input[type="text"]', aM.data_check_username);
+        $('nav').on('change', 'input[type="text"]', aM.data_check_username);
         $('nav').on('click', '[data-logout]', aM.logout);
         $('body').on('click', '[data-submit]', aM.common_submit);
         $('#work-space').on('change', '[data-form] input, [data-form] textarea', aM.enable_update);
