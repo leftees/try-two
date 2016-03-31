@@ -6,6 +6,6 @@ before_install:
   - npm install -g grunt-cli
 addons:
   code_climate:
-    repo_token: a6f6d909e8cfa7b94c44c0fb618d5c6b24beccbe0d805a89d93c596be609c124
+    repo_token: dd25299e579f9e71de8eb6dc300400a821326210e6693da02897e524650e7947
 after_script:
   - codeclimate-test-reporter < lcov.info
