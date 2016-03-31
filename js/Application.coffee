@@ -53,15 +53,22 @@ window.Application = () ->
           $('nav [data-submit="users:update"]').removeClass 'disabled'
           $('nav [data-form]').attr 'value', data[0].id
 
+    data_selector: (key, names) ->
+      selector = []
+      for name in names
+        selector.push "[data-#{key}*='#{name}']"
+      selector.join ', '
+
     enable_update: () ->
       form = $(@).parents '[data-form]'
       valid = true
       $(form).find('input, textarea').each ->
         valid = false if $(@).val() is ''
+      submit = aM.data_selector 'submit', ['update', 'create']
       if valid
-        form.find('[data-submit*="update"], [data-submit*="create"]').removeClass 'disabled'
+        form.find(submit).removeClass 'disabled'
       else
-        form.find('[data-submit*="update"], [data-submit*="create"]').addClass 'disabled'
+        form.find(submit).addClass 'disabled'
 
     render_done_state: (model, verb, button, data) ->
       form = $(button).parents '[data-form]'
@@ -115,7 +122,8 @@ window.Application = () ->
           url: url
           data: params
           beforeSend: (xhr) ->
-            xhr.setRequestHeader "Authorization", "Basic " + btoa("#{username}:#{password}")
+            xhr.setRequestHeader "Authorization",
+            "Basic " + btoa("#{username}:#{password}")
         .done (data) ->
           if login
             aD.username = username

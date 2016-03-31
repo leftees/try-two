@@ -83,8 +83,17 @@
           }
         });
       },
+      data_selector: function(key, names) {
+        var i, len, name, selector;
+        selector = [];
+        for (i = 0, len = names.length; i < len; i++) {
+          name = names[i];
+          selector.push("[data-" + key + "*='" + name + "']");
+        }
+        return selector.join(', ');
+      },
       enable_update: function() {
-        var form, valid;
+        var form, submit, valid;
         form = $(this).parents('[data-form]');
         valid = true;
         $(form).find('input, textarea').each(function() {
@@ -92,10 +101,11 @@
             return valid = false;
           }
         });
+        submit = aM.data_selector('submit', ['update', 'create']);
         if (valid) {
-          return form.find('[data-submit*="update"], [data-submit*="create"]').removeClass('disabled');
+          return form.find(submit).removeClass('disabled');
         } else {
-          return form.find('[data-submit*="update"], [data-submit*="create"]').addClass('disabled');
+          return form.find(submit).addClass('disabled');
         }
       },
       render_done_state: function(model, verb, button, data) {
