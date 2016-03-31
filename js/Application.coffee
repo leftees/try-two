@@ -111,12 +111,9 @@ window.Application = () ->
           params[model] = {}
           form.find('input, textarea').each ->
             params[model][$(@).data 'field'] = $(@).val()
-        if form.data 'form' is 'login'
-          login = true
-          username = if aD.username? then aD.username else params.user.username
-          password = if aD.password? then aD.password else params.user.password
-        else
-          login = false
+        login = form.data('form') is 'login'
+        username = if aD.username? then aD.username else params.user.username
+        password = if aD.password? then aD.password else params.user.password
         $.ajax
           type: type
           url: url

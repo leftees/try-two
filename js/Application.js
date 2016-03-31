@@ -167,13 +167,9 @@
               return params[model][$(this).data('field')] = $(this).val();
             });
           }
-          if (form.data('form' === 'login')) {
-            login = true;
-            username = aD.username != null ? aD.username : params.user.username;
-            password = aD.password != null ? aD.password : params.user.password;
-          } else {
-            login = false;
-          }
+          login = form.data('form') === 'login';
+          username = aD.username != null ? aD.username : params.user.username;
+          password = aD.password != null ? aD.password : params.user.password;
           return $.ajax({
             type: type,
             url: url,
